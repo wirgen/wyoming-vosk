@@ -10,6 +10,7 @@ from functools import partial
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
+from text_to_num import alpha2digit
 from vosk import KaldiRecognizer, Model, SetLogLevel
 from wyoming.asr import Transcribe, Transcript
 from wyoming.audio import AudioChunk, AudioChunkConverter, AudioStart, AudioStop
@@ -306,7 +307,7 @@ class VoskEventHandler(AsyncEventHandler):
             # Get transcript
             assert self.recognizer is not None
             result = json.loads(self.recognizer.FinalResult())
-            text = result["text"]
+            text = alpha2digit(result["text"], self.language)
             _LOGGER.debug("Transcript for client %s: %s", self.client_id, text)
 
             if self.cli_args.correct_sentences is not None:
